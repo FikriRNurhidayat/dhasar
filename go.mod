@@ -5,6 +5,7 @@ go 1.22.1
 require (
 	github.com/Masterminds/squirrel v1.5.4
 	github.com/labstack/echo/v4 v4.12.0
+	github.com/lib/pq v1.10.9
 	github.com/spf13/viper v1.18.2
 )
 
