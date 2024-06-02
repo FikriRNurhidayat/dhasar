@@ -5,7 +5,7 @@ import (
 	"database/sql"
 
 	manager_values "github.com/fikrirnurhidayat/dhasar/manager/values"
-	"github.com/fikrirnurhidayat/dhasar/pkg/logger"
+	"github.com/fikrirnurhidayat/x/logger"
 )
 
 type TransactionManager interface {

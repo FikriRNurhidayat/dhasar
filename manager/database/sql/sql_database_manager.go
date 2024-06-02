@@ -8,7 +8,7 @@ import (
 
 	"github.com/Masterminds/squirrel"
 	manager_values "github.com/fikrirnurhidayat/dhasar/manager/values"
-	"github.com/fikrirnurhidayat/dhasar/pkg/logger"
+	"github.com/fikrirnurhidayat/x/logger"
 	"github.com/fikrirnurhidayat/dhasar/specification"
 )
 

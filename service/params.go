@@ -3,7 +3,7 @@ package dhasar_service
 import (
 	"math"
 
-	"github.com/fikrirnurhidayat/dhasar/pkg/exists"
+	"github.com/fikrirnurhidayat/x/exists"
 )
 
 type PaginationParams struct {
