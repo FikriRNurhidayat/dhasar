@@ -18,7 +18,7 @@ func (m *Module) Wire(dependency *RootDependency) {
 }
 
 type RootDependency struct {
-	SQLDatabaseManager sql_database_manager.DatabaseManager
+	SQLDatabaseManager sql_database_manager.SQLDatabaseManager
 	TransactionManager transaction_manager.TransactionManager
 	Logger             logger.Logger
 }

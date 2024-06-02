@@ -231,9 +231,6 @@ func New[Entity any, Specification any, Row any](opt Option[Entity, Specificatio
 	}
 
 	r.upsertSuffix = r.makeUpsertSuffix()
-	if err := r.checkSchema(); err != nil {
-		return nil, err
-	}
 
 	return r, nil
 }
@@ -259,38 +256,4 @@ func (r *SQLiteRepository[Entity, Specification, Row]) makeUpsertSuffix() string
 	}
 
 	return fmt.Sprintf("ON CONFLICT (%s) DO UPDATE SET %s", r.primaryKey, strings.Join(parts, ", "))
-}
-
-func (r *SQLiteRepository[Entity, Specification, Row]) checkSchema() error {
-	ctx := context.Background()
-	builder := sq.Select("column_name", "data_type").From("information_schema.columns").Where(sq.Eq{"table_name": r.tableName})
-
-	query, args, err := builder.PlaceholderFormat(sq.Dollar).ToSql()
-	if err != nil {
-		return err
-	}
-
-	rows, err := r.dbm.Querier(ctx).QueryContext(ctx, query, args...)
-	if err != nil {
-		return err
-	}
-
-	var columnName, expectedType string
-	for rows.Next() {
-		err := rows.Scan(&columnName, &expectedType)
-		if err != nil {
-			return err
-		}
-		actualType, ok := r.schema[columnName]
-		if !ok || actualType != expectedType {
-			r.logger.Error("sqlite/INVALID_SCHEMA", "table_name", r.tableName, "column", columnName, "expected_type", expectedType, "actual_type", actualType)
-			return ErrInvalidSchema.Format(columnName, expectedType, actualType)
-		}
-	}
-
-	if err := rows.Err(); err != nil {
-		return err
-	}
-
-	return nil
 }
