@@ -1,5 +1,9 @@
 package sqlite_repository
 
 var (
-	Integer = "integer"
+	Null    = "NULL"
+	Integer = "INTEGER"
+	Real    = "REAL"
+	Text    = "TEXT"
+	Blob    = "BLOB"
 )
