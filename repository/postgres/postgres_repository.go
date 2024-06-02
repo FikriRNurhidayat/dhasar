@@ -8,9 +8,9 @@ import (
 
 	sq "github.com/Masterminds/squirrel"
 	sql_database_manager "github.com/fikrirnurhidayat/dhasar/manager/database/sql"
-	"github.com/fikrirnurhidayat/x/logger"
 	"github.com/fikrirnurhidayat/dhasar/repository"
 	"github.com/fikrirnurhidayat/dhasar/specification"
+	"github.com/fikrirnurhidayat/x/logger"
 )
 
 type PostgresRepository[Entity any, Specification any, Row any] struct {
