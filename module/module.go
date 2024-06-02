@@ -5,7 +5,7 @@ import (
 
 	sql_database_manager "github.com/fikrirnurhidayat/dhasar/manager/database/sql"
 	transaction_manager "github.com/fikrirnurhidayat/dhasar/manager/transaction"
-	"github.com/fikrirnurhidayat/dhasar/pkg/logger"
+	"github.com/fikrirnurhidayat/x/logger"
 	echo "github.com/labstack/echo/v4"
 )
 

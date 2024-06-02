@@ -8,7 +8,7 @@ import (
 
 	sq "github.com/Masterminds/squirrel"
 	sql_database_manager "github.com/fikrirnurhidayat/dhasar/manager/database/sql"
-	"github.com/fikrirnurhidayat/dhasar/pkg/logger"
+	"github.com/fikrirnurhidayat/x/logger"
 	"github.com/fikrirnurhidayat/dhasar/repository"
 	"github.com/fikrirnurhidayat/dhasar/specification"
 )
