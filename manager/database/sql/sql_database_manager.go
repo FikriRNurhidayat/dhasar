@@ -8,8 +8,8 @@ import (
 
 	"github.com/Masterminds/squirrel"
 	manager_values "github.com/fikrirnurhidayat/dhasar/manager/values"
-	"github.com/fikrirnurhidayat/x/logger"
 	"github.com/fikrirnurhidayat/dhasar/specification"
+	"github.com/fikrirnurhidayat/x/logger"
 )
 
 type Querier interface {

@@ -2,9 +2,9 @@ package postgres
 
 import (
 	"database/sql"
-	_ "github.com/mattn/go-sqlite3"
+	_ "modernc.org/sqlite"
 )
 
-func Connect(connStr string) (*sql.DB, error) {
-	return sql.Open("sqlite3", connStr)
+func Connect(dbPath string) (*sql.DB, error) {
+	return sql.Open("sqlite", dbPath)
 }
