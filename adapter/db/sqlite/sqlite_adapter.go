@@ -1,4 +1,4 @@
-package postgres
+package sqlite_adapter
 
 import (
 	"database/sql"
