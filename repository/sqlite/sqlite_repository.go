@@ -172,10 +172,9 @@ func (r *SQLiteRepository[Entity, Specification, Row]) Save(ctx context.Context,
 	row := r.row(entity)
 
 	query, args, err := sq.
-		Insert(r.tableName).
+		Replace(r.tableName).
 		Columns(r.columns...).
 		Values(r.values(row)...).
-		Suffix(r.upsertSuffix).
 		PlaceholderFormat(sq.Dollar).
 		ToSql()
 	if err != nil {

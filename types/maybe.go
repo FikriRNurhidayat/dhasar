@@ -21,22 +21,22 @@ func (m Maybe[T]) MarshalJSON() ([]byte, error) {
 }
 
 func MaybeTime(value time.Time) Maybe[time.Time] {
-  return Maybe[time.Time]{
-    Valid: exists.Date(value),
-    Value: value,
-  }
+	return Maybe[time.Time]{
+		Valid: exists.Date(value),
+		Value: value,
+	}
 }
 
 func MaybeString(value string) Maybe[string] {
-  return Maybe[string]{
-    Valid: exists.String(value),
-    Value: value,
-  }
+	return Maybe[string]{
+		Valid: exists.String(value),
+		Value: value,
+	}
 }
 
 func MaybeNumber(value uint32) Maybe[uint32] {
-  return Maybe[uint32]{
-    Valid: exists.Number(value),
-    Value: value,
-  }
+	return Maybe[uint32]{
+		Valid: exists.Number(value),
+		Value: value,
+	}
 }
