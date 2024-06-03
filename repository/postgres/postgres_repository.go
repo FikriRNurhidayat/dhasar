@@ -102,9 +102,12 @@ func (r *PostgresRepository[Entity, Specification, Row]) Get(ctx context.Context
 		Filters: specs,
 		Limit:   dhasar_specification.WithLimit(1),
 	})
+
 	if err != nil {
 		return r.noEntity, err
 	}
+
+  defer rows.Close()
 
 	for rows.Next() {
 		row, err := r.scan(rows)
@@ -136,6 +139,8 @@ func (r *PostgresRepository[Entity, Specification, Row]) Exist(ctx context.Conte
 
 	var exist int
 
+  defer rows.Close()
+
 	for rows.Next() {
 		err := rows.Scan(&exist)
 		if err == sql.ErrNoRows {
@@ -155,6 +160,9 @@ func (r *PostgresRepository[Entity, Specification, Row]) List(ctx context.Contex
 	}
 
 	entities := []Entity{}
+
+  defer rows.Close()
+
 	for rows.Next() {
 		row, err := r.scan(rows)
 		if err != nil {
@@ -175,8 +183,8 @@ func (r *PostgresRepository[Entity, Specification, Row]) Save(ctx context.Contex
 		Insert(r.tableName).
 		Columns(r.columns...).
 		Values(r.values(row)...).
-		Suffix(r.upsertSuffix).
-		PlaceholderFormat(sq.Dollar).
+    PlaceholderFormat(sq.Dollar).
+    Suffix(r.upsertSuffix).
 		ToSql()
 	if err != nil {
 		return err
@@ -206,6 +214,8 @@ func (r *PostgresRepository[Entity, Specification, Row]) Size(ctx context.Contex
 		return 0, err
 	}
 
+  defer rows.Close()
+
 	for rows.Next() {
 		if err := rows.Scan(&count); err != nil {
 			return 0, err
@@ -231,9 +241,6 @@ func New[Entity any, Specification any, Row any](opt Option[Entity, Specificatio
 	}
 
 	r.upsertSuffix = r.makeUpsertSuffix()
-	if err := r.checkSchema(); err != nil {
-		return nil, err
-	}
 
 	return r, nil
 }
@@ -259,38 +266,4 @@ func (r *PostgresRepository[Entity, Specification, Row]) makeUpsertSuffix() stri
 	}
 
 	return fmt.Sprintf("ON CONFLICT (%s) DO UPDATE SET %s", r.primaryKey, strings.Join(parts, ", "))
-}
-
-func (r *PostgresRepository[Entity, Specification, Row]) checkSchema() error {
-	ctx := context.Background()
-	builder := sq.Select("column_name", "data_type").From("information_schema.columns").Where(sq.Eq{"table_name": r.tableName})
-
-	query, args, err := builder.PlaceholderFormat(sq.Dollar).ToSql()
-	if err != nil {
-		return err
-	}
-
-	rows, err := r.dbm.Querier(ctx).QueryContext(ctx, query, args...)
-	if err != nil {
-		return err
-	}
-
-	var columnName, expectedType string
-	for rows.Next() {
-		err := rows.Scan(&columnName, &expectedType)
-		if err != nil {
-			return err
-		}
-		actualType, ok := r.schema[columnName]
-		if !ok || actualType != expectedType {
-			r.logger.Error("postgres/INVALID_SCHEMA", "table_name", r.tableName, "column", columnName, "expected_type", expectedType, "actual_type", actualType)
-			return ErrInvalidSchema.Format(columnName, expectedType, actualType)
-		}
-	}
-
-	if err := rows.Err(); err != nil {
-		return err
-	}
-
-	return nil
 }

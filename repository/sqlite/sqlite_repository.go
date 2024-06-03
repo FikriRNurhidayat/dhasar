@@ -102,9 +102,12 @@ func (r *SQLiteRepository[Entity, Specification, Row]) Get(ctx context.Context, 
 		Filters: specs,
 		Limit:   dhasar_specification.WithLimit(1),
 	})
+
 	if err != nil {
 		return r.noEntity, err
 	}
+
+  defer rows.Close()
 
 	for rows.Next() {
 		row, err := r.scan(rows)
@@ -136,6 +139,8 @@ func (r *SQLiteRepository[Entity, Specification, Row]) Exist(ctx context.Context
 
 	var exist int
 
+  defer rows.Close()
+
 	for rows.Next() {
 		err := rows.Scan(&exist)
 		if err == sql.ErrNoRows {
@@ -155,6 +160,9 @@ func (r *SQLiteRepository[Entity, Specification, Row]) List(ctx context.Context,
 	}
 
 	entities := []Entity{}
+
+  defer rows.Close()
+
 	for rows.Next() {
 		row, err := r.scan(rows)
 		if err != nil {
@@ -172,10 +180,10 @@ func (r *SQLiteRepository[Entity, Specification, Row]) Save(ctx context.Context,
 	row := r.row(entity)
 
 	query, args, err := sq.
-		Replace(r.tableName).
+		Insert(r.tableName).
 		Columns(r.columns...).
 		Values(r.values(row)...).
-		PlaceholderFormat(sq.Dollar).
+    Suffix(r.upsertSuffix).
 		ToSql()
 	if err != nil {
 		return err
@@ -204,6 +212,8 @@ func (r *SQLiteRepository[Entity, Specification, Row]) Size(ctx context.Context,
 	if err != nil {
 		return 0, err
 	}
+
+  defer rows.Close()
 
 	for rows.Next() {
 		if err := rows.Scan(&count); err != nil {
