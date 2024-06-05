@@ -32,16 +32,16 @@ func (c *Container) Resolve(name string) (interface{}, error) {
 	return dependency, nil
 }
 
-func Get[T any](c *Container, name string) (T, error) {
+func Get[T any](c *Container, name string) (T) {
 	dependency, err := c.Resolve(name)
 	if err != nil {
-		var zero T
-		return zero, err
+    panic(fmt.Sprintf("%s is not resolved.", name))
 	}
+
 	dep, ok := dependency.(T)
 	if !ok {
-		var zero T
-		return zero, fmt.Errorf("dependency %s is of incorrect type", name)
+    panic(fmt.Sprintf("%s is not resolved.", name))
 	}
-	return dep, nil
+
+	return dep
 }
