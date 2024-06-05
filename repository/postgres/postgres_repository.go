@@ -107,7 +107,7 @@ func (r *PostgresRepository[Entity, Specification, Row]) Get(ctx context.Context
 		return r.noEntity, err
 	}
 
-  defer rows.Close()
+	defer rows.Close()
 
 	for rows.Next() {
 		row, err := r.scan(rows)
@@ -139,7 +139,7 @@ func (r *PostgresRepository[Entity, Specification, Row]) Exist(ctx context.Conte
 
 	var exist int
 
-  defer rows.Close()
+	defer rows.Close()
 
 	for rows.Next() {
 		err := rows.Scan(&exist)
@@ -161,7 +161,7 @@ func (r *PostgresRepository[Entity, Specification, Row]) List(ctx context.Contex
 
 	entities := []Entity{}
 
-  defer rows.Close()
+	defer rows.Close()
 
 	for rows.Next() {
 		row, err := r.scan(rows)
@@ -183,8 +183,8 @@ func (r *PostgresRepository[Entity, Specification, Row]) Save(ctx context.Contex
 		Insert(r.tableName).
 		Columns(r.columns...).
 		Values(r.values(row)...).
-    PlaceholderFormat(sq.Dollar).
-    Suffix(r.upsertSuffix).
+		PlaceholderFormat(sq.Dollar).
+		Suffix(r.upsertSuffix).
 		ToSql()
 	if err != nil {
 		return err
@@ -214,7 +214,7 @@ func (r *PostgresRepository[Entity, Specification, Row]) Size(ctx context.Contex
 		return 0, err
 	}
 
-  defer rows.Close()
+	defer rows.Close()
 
 	for rows.Next() {
 		if err := rows.Scan(&count); err != nil {
