@@ -2,46 +2,29 @@ package dhasar_container
 
 import (
 	"fmt"
-	"sync"
+	"reflect"
 )
 
 type Container struct {
-	mu           sync.RWMutex
-	dependencies map[string]interface{}
+	dependencies map[reflect.Type]interface{}
 }
 
-func NewContainer() *Container {
+func New() *Container {
 	return &Container{
-		dependencies: make(map[string]interface{}),
+		dependencies: make(map[reflect.Type]interface{}),
 	}
 }
 
-func (c *Container) Register(name string, dependency interface{}) {
-	c.mu.Lock()
-	defer c.mu.Unlock()
-	c.dependencies[name] = dependency
+func (c *Container) Register(dependency interface{}) {
+	t := reflect.TypeOf(dependency)
+	c.dependencies[t] = dependency
 }
 
-func (c *Container) Resolve(name string) (interface{}, error) {
-	c.mu.RLock()
-	defer c.mu.RUnlock()
-	dependency, ok := c.dependencies[name]
-	if !ok {
-		return nil, fmt.Errorf("dependency %s not found", name)
+func Get[T any](c *Container) T {
+	t := reflect.TypeOf((*T)(nil)).Elem()
+	dependency, exists := c.dependencies[t]
+	if !exists {
+		panic(fmt.Sprintf("no dependency found for type %v", t))
 	}
-	return dependency, nil
-}
-
-func Get[T any](c *Container, name string) (T) {
-	dependency, err := c.Resolve(name)
-	if err != nil {
-    panic(fmt.Sprintf("%s is not resolved.", name))
-	}
-
-	dep, ok := dependency.(T)
-	if !ok {
-    panic(fmt.Sprintf("%s is not resolved.", name))
-	}
-
-	return dep
+	return dependency.(T)
 }
