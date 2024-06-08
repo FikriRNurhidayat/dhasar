@@ -23,7 +23,7 @@ var (
 
 	ErrInvalidUUID = &Error{
 		Code:    http.StatusBadRequest,
-		Reason:  "INVALID_UUID_ERROR",
+		Reason:  "INVALID_UUID",
 		Message: "UUID is not valid. Please pass valid UUID.",
 	}
 )

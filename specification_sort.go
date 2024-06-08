@@ -1,16 +1,11 @@
 package dhasar
 
-type SortArg struct {
-	Column    string
-	Direction string
-}
-
 type SortSpecification struct {
-	Args []SortArg
+	Arguments SortArguments
 }
 
-func Sort(args ...SortArg) Specification {
+func Sort(args ...SortArgument) Specification {
 	return SortSpecification{
-		Args: args,
+		Arguments: args,
 	}
 }
