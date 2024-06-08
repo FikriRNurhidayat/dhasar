@@ -5,10 +5,10 @@ import (
 )
 
 type ListArgs[T any] struct {
-	Filters []T
-	Sort    Specification
-	Limit   Specification
-	Offset  Specification
+	Specifications []T
+	Sort           Specification
+	Limit          Specification
+	Offset         Specification
 }
 
 type Repository[Entity any, Specification any] interface {

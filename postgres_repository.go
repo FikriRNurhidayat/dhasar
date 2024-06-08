@@ -96,7 +96,7 @@ func (r *PostgresRepository[Entity, Specification, Row]) Each(ctx context.Contex
 
 func (r *PostgresRepository[Entity, Specification, Row]) Get(ctx context.Context, specs ...Specification) (Entity, error) {
 	rows, err := r.query(ctx, ListArgs[Specification]{
-		Filters: specs,
+		Specifications: specs,
 		Limit:   WithLimitSpecs(1),
 	})
 
@@ -246,7 +246,7 @@ func (r *PostgresRepository[Entity, Specification, Row]) query(ctx context.Conte
 	builder := sq.
 		Select(r.columns...).
 		From(r.tableName).
-		Where(r.filter(args.Filters...))
+		Where(r.filter(args.Specifications...))
 	builder = r.dbm.Paginate(builder, args.Limit, args.Offset)
 	queryStr, queryArgs, err := builder.PlaceholderFormat(sq.Dollar).ToSql()
 	if err != nil {
