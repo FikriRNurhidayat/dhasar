@@ -42,7 +42,7 @@ func (s *SQLiteAdapter) Connect(opt *Option) (*sql.DB, error) {
 	return db, nil
 }
 
-func New(logger logger.Logger) Adapter[*Option, *sql.DB] {
+func NewSQLiteAdapter(logger logger.Logger) Adapter[*Option, *sql.DB] {
 	return &SQLiteAdapter{
 		logger: logger,
 	}
