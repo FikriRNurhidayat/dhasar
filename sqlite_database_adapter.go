@@ -7,16 +7,16 @@ import (
 	_ "modernc.org/sqlite"
 )
 
-type SQLiteAdapter struct {
+type SQLiteDatabaseAdapter struct {
 	db     *sql.DB
 	logger logger.Logger
 }
 
-type SQLiteAdapterOption struct {
+type SQLiteDatabaseAdapterOption struct {
 	FilePath string
 }
 
-func (s *SQLiteAdapter) Close() error {
+func (s *SQLiteDatabaseAdapter) Close() error {
 	if err := s.db.Close(); err != nil {
 		s.logger.Error("sqlite/CLOSE", logger.String("error", err.Error()))
 		return err
@@ -27,7 +27,7 @@ func (s *SQLiteAdapter) Close() error {
 	return nil
 }
 
-func (s *SQLiteAdapter) Connect(opt *SQLiteAdapterOption) (*sql.DB, error) {
+func (s *SQLiteDatabaseAdapter) Connect(opt *SQLiteDatabaseAdapterOption) (*sql.DB, error) {
 	db, err := sql.Open("sqlite", opt.FilePath)
 
 	if err != nil {
@@ -42,8 +42,8 @@ func (s *SQLiteAdapter) Connect(opt *SQLiteAdapterOption) (*sql.DB, error) {
 	return db, nil
 }
 
-func NewSQLiteAdapter(logger logger.Logger) Adapter[*SQLiteAdapterOption, *sql.DB] {
-	return &SQLiteAdapter{
+func NewSQLiteDatabaseAdapter(logger logger.Logger) Adapter[*SQLiteDatabaseAdapterOption, *sql.DB] {
+	return &SQLiteDatabaseAdapter{
 		logger: logger,
 	}
 }
