@@ -67,7 +67,7 @@ func (s *HTTPServer) RequestLogger() echo.MiddlewareFunc {
 				logger.String("took", fmt.Sprintf("%d ms", v.Latency.Milliseconds())),
 			}
 
-			serverLogger := Get[logger.Logger](s.Container, "Logger")
+			serverLogger := GetDep[logger.Logger](s.Container, "Logger")
 
 			if v.Error == nil {
 				serverLogger.Info("http/OK", args...)
@@ -76,6 +76,7 @@ func (s *HTTPServer) RequestLogger() echo.MiddlewareFunc {
 					serverLogger.Warn("http/ROUTE_NOT_FOUND", args...)
 					return nil
 				}
+
 				if val, ok := v.Error.(*Error); ok {
 					serverLogger.Warn(fmt.Sprintf("http/%s", val.Reason), args...)
 					return nil
