@@ -32,7 +32,7 @@ func (c *Container) Resolve(name string) (interface{}, error) {
 	return dependency, nil
 }
 
-func Get[T any](c *Container, name string) T {
+func GetDep[T any](c *Container, name string) T {
 	dependency, err := c.Resolve(name)
 	if err != nil {
 		panic(fmt.Sprintf("%s is not resolved.", name))
