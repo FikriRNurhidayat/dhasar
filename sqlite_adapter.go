@@ -12,7 +12,7 @@ type SQLiteAdapter struct {
 	logger logger.Logger
 }
 
-type Option struct {
+type SQLiteAdapterOption struct {
 	FilePath string
 }
 
@@ -27,7 +27,7 @@ func (s *SQLiteAdapter) Close() error {
 	return nil
 }
 
-func (s *SQLiteAdapter) Connect(opt *Option) (*sql.DB, error) {
+func (s *SQLiteAdapter) Connect(opt *SQLiteAdapterOption) (*sql.DB, error) {
 	db, err := sql.Open("sqlite", opt.FilePath)
 
 	if err != nil {
@@ -42,7 +42,7 @@ func (s *SQLiteAdapter) Connect(opt *Option) (*sql.DB, error) {
 	return db, nil
 }
 
-func NewSQLiteAdapter(logger logger.Logger) Adapter[*Option, *sql.DB] {
+func NewSQLiteAdapter(logger logger.Logger) Adapter[*SQLiteAdapterOption, *sql.DB] {
 	return &SQLiteAdapter{
 		logger: logger,
 	}
